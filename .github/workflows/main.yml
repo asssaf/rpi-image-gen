@@ -14,7 +14,10 @@ jobs:
         run: |
            #curl -fsSL https://archive.raspberrypi.com/debian/raspberrypi.gpg.key \
            #  | gpg --dearmor | sudo tee /usr/share/keyrings/raspberrypi-archive-keyring.gpg
-           sudo cp keydir/* /etc/apt/keyrings/
+           #sudo cp keydir/* /etc/apt/keyrings/
+           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
+           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853
+           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BDE6D2B9216EC7A8
 
       - name: install-deps
         run: |

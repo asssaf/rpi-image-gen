@@ -29,7 +29,7 @@ jobs:
         with:
           name: image
           #path: rpi-image-gen/work/**/*.img
-          path: **/work/**/deploy/*.img
+          path: "**/work/**/deploy/*.img"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4

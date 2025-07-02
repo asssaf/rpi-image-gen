@@ -12,7 +12,6 @@ jobs:
 
       - name: install-deps
         run: |
-          cd rpi-image-gen
           sudo ./install_deps.sh
 
       - name: build

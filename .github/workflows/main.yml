@@ -29,16 +29,16 @@ jobs:
         with:
           name: image
           #path: rpi-image-gen/work/**/*.img
-          path: "**/work/**/deploy/*.img"
+          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/deb12-arm64-min/artefacts/deb12-arm64-min.img"
 
-      - name: upload-artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sparse
-          path: rpi-image-gen/work/**/*.img.sparse
+      # - name: upload-artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: sparse
+      #     path: rpi-image-gen/work/**/*.img.sparse
 
-      - name: upload-artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sbom
-          path: rpi-image-gen/work/**/*.sbom
+      # - name: upload-artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: sbom
+      #     path: rpi-image-gen/work/**/*.sbom

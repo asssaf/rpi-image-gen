@@ -12,8 +12,9 @@ jobs:
 
       - name: install-keys
         run: |
-           curl -fsSL https://archive.raspberrypi.com/debian/raspberrypi.gpg.key \
-             | gpg --dearmor | sudo tee /usr/share/keyrings/raspberrypi-archive-keyring.gpg
+           #curl -fsSL https://archive.raspberrypi.com/debian/raspberrypi.gpg.key \
+           #  | gpg --dearmor | sudo tee /usr/share/keyrings/raspberrypi-archive-keyring.gpg
+           cp keys/* /etc/apt/keyrings/
 
       - name: install-deps
         run: |

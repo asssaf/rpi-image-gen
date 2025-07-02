@@ -10,6 +10,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: install-keys
+        run: |
+           curl -fsSL https://archive.raspberrypi.com/debian/raspberrypi.gpg.key \
+             | gpg --dearmor | sudo tee /usr/share/keyrings/raspberrypi-archive-keyring.gpg
+
       - name: install-deps
         run: |
           sudo ./install_deps.sh

@@ -1,0 +1,43 @@
+on:
+  workflow_dispatch:
+  pull_request:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: install-keys
+        run: |
+           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
+           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853
+           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BDE6D2B9216EC7A8
+
+      - name: install-deps
+        run: |
+          sudo ./install_deps.sh
+
+      - name: build
+        run: |
+          ./build.sh
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: image
+          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.img"
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sparse
+          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.img.sparse"
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.sbom"

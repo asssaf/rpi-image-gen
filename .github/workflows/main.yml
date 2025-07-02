@@ -26,3 +26,21 @@ jobs:
       - name: build
         run: |
           ./build.sh
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: image
+          path: work/*.img
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: sparse
+          path: work/*.img.sparse
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: sbom
+          path: work/*.sbom

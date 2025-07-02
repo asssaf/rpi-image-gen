@@ -28,14 +28,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: image
-          #path: rpi-image-gen/work/**/*.img
-          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/deb12-arm64-min/artefacts/deb12-arm64-min.img"
+          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.img"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sparse
-          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/artefacts/*.img.sparse"
+          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.img.sparse"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4

@@ -49,7 +49,7 @@ jobs:
         id: cache-kernel-sources
         uses: actions/cache@v4
         with:
-          path: "${GITHUB_WORKSPACE}/linux-6.12.34"
+          path: "${{env.GITHUB_WORKSPACE}}/linux-6.12.34"
           key: "sources-6.12.34"
 
       - name: download-sources
@@ -61,7 +61,7 @@ jobs:
         id: cache-kernel-qemu
         uses: actions/cache@v4
         with:
-          path: "${GITHUB_WORKSPACE}/Image"
+          path: "${{env.GITHUB_WORKSPACE}}/Image"
           key: "image-6.12.34"
 
       - name: build-kernel-qmeu
@@ -81,5 +81,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: kernel8-qemu
-          path: "${GITHUB_WORKSPACE}/Image"
+          path: "${{env.GITHUB_WORKSPACE}}/Image"
 

@@ -48,3 +48,8 @@ jobs:
           name: boot.vfat
           path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/artefacts/boot.vfat"
 
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/artefacts/*"

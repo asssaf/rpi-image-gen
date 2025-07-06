@@ -45,19 +45,26 @@ jobs:
   build-kernel-qemu:
     runs-on: ubuntu-24.04-arm
     steps:
-      - name: Cache
+      - name: cache-kernel-sources
+        id: cache-kernel-sources
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/work/linux-6.12.34
+          key: "sources-6.12.34"
+
+      - name: download-sources
+        if: steps.cache-kernel-sources.outputs.cache-hit != 'true'
+        run: |
+          curl -sL https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.34.tar.xz | tar -xvJ
+
+      - name: cache-kernel-qemu
         id: cache-kernel-qemu
         uses: actions/cache@v4
         with:
           path: /home/runner/work/Image
-          key: "6.12.34"
+          key: "image-6.12.34"
 
-      - name: download-sources
-        if: steps.cache-kernel-qemu.outputs.cache-hit != 'true'
-        run: |
-          curl -sL https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.34.tar.xz | tar -xvJ
-
-      - name: build
+      - name: build-kernel-qmeu
         if: steps.cache-kernel-qemu.outputs.cache-hit != 'true'
         run: |
           cd linux-6.12.34
@@ -66,9 +73,10 @@ jobs:
           # Use the kvm_guest config as the base defconfig, which is suitable for qemu
           ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make kvm_guest.config
           # Build the kernel
-          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make vmlinux -j8
+          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
 
-          cp -av arch/arm64/boot/Image ~/work/
+          ls -la arch/arm64/boot/
+          cp -av arch/arm64/boot/Image ~/work/Image
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4

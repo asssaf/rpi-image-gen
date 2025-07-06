@@ -41,3 +41,27 @@ jobs:
         with:
           name: sbom
           path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.sbom"
+
+  build-kernel-qemu:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: download-sources
+        run: |
+          curl -sL https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.34.tar.xz | tar -xvJ
+
+      - name: build
+        run: |
+          cd linux-6.12.34
+          # create a .config file
+          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make defconfig
+          # Use the kvm_guest config as the base defconfig, which is suitable for qemu
+          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make kvm_guest.config
+          # Build the kernel
+          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make -j8
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel8-qemu
+          path: "/home/runner/work/**/linux-*/arch/arm64/boot/Image"
+

@@ -49,21 +49,19 @@ jobs:
         id: cache-kernel-sources
         uses: actions/cache@v4
         with:
-          path: /home/runner/work/linux-6.12.34
+          path: "${GITHUB_WORKSPACE}/linux-6.12.34"
           key: "sources-6.12.34"
 
       - name: download-sources
         if: steps.cache-kernel-sources.outputs.cache-hit != 'true'
         run: |
           curl -sL https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.34.tar.xz | tar -xvJ
-          pwd
-          ls -la
 
       - name: cache-kernel-qemu
         id: cache-kernel-qemu
         uses: actions/cache@v4
         with:
-          path: /home/runner/work/Image
+          path: "${GITHUB_WORKSPACE}/Image"
           key: "image-6.12.34"
 
       - name: build-kernel-qmeu
@@ -77,12 +75,11 @@ jobs:
           # Build the kernel
           ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
 
-          ls -la arch/arm64/boot/
-          cp -av arch/arm64/boot/Image ~/work/Image
+          cp -av arch/arm64/boot/Image "${GITHUB_WORKSPACE}/Image"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: kernel8-qemu
-          path: "/home/runner/work/Image"
+          path: "${GITHUB_WORKSPACE}/Image"
 

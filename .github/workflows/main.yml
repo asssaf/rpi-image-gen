@@ -22,7 +22,7 @@ jobs:
 
       - name: build
         run: |
-          ./build.sh
+          ./build.sh -D ./custom/ -c custom -o ./custom/custom.options
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4

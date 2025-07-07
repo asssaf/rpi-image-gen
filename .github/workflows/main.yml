@@ -120,5 +120,8 @@ jobs:
             -device virtio-net-pci,netdev=mynet \
             -monitor telnet:127.0.0.1:5555,server,nowait > qemu.out &
 
-          sshpass -p raspberry ssh -o StrictHostKeychecking=no -p 2223 user@127.0.0.1 shutdown -h now
+          until sshpass -p raspberry ssh -o StrictHostKeychecking=no -p 2223 user@127.0.0.1 shutdown -h now
+          do
+            sleep 5
+          done
 

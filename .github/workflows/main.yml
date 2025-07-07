@@ -22,7 +22,7 @@ jobs:
 
       - name: build
         run: |
-          ./build.sh
+          ./build.sh -D ./custom/slim/ -c pi5-slim -o ./custom/slim/my.options
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4

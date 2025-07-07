@@ -86,15 +86,23 @@ jobs:
   test:
     runs-on: ubuntu-24.04-arm
     steps:
+      - name: download-kernel
+        uses: actions/download-artifact@v4
+        with:
+          name: kernel8-qemu
+          run-id: 16108358867
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          path: "${{github.workspace}}"
+
       - name: download-image
         uses: actions/download-artifact@v4
         with:
           artifact-ids: 3474235253
           run-id: 16108358867
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-          path: "${{github.workspace}}/image"
+          path: "${{github.workspace}}"
 
       - name: run
         run: |
-          ls -R "${GITHUB_WORKSPACE}/image"
-
+          ls -R "${GITHUB_WORKSPACE}/"
+          #${GITHUB_WORKSPACE}/image/custom/deploy/custom.img

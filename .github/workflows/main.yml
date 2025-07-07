@@ -106,9 +106,8 @@ jobs:
       - name: run
         timeout-minutes: 5
         run: |
-          ls -R "${GITHUB_WORKSPACE}/"
           KERNEL="${GITHUB_WORKSPACE}/Image"
-          IMAGE="${GITHUB_WORKSPACE}/image/custom/deploy/custom.img"
+          IMAGE="${GITHUB_WORKSPACE}/custom/deploy/custom.img"
           qemu-system-aarch64 -machine virt -cpu cortex-a72 -smp 2 -m 1G \
             -kernel "$KERNEL" -append "root=/dev/vda2 rootfstype=ext4 rw console=ttyAMA0 debug=y" \
             -nographic \

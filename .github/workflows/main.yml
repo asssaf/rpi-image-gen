@@ -49,7 +49,7 @@ jobs:
         id: cache-kernel-sources
         uses: actions/cache@v4
         with:
-          path: "${{env.GITHUB_WORKSPACE}}/linux-6.12.34"
+          path: "${{github.workspace}}/linux-6.12.34"
           key: "sources-6.12.34"
 
       - name: download-sources
@@ -61,7 +61,7 @@ jobs:
         id: cache-kernel-qemu
         uses: actions/cache@v4
         with:
-          path: "${{env.GITHUB_WORKSPACE}}/Image"
+          path: "${{github.workspace}}/Image"
           key: "image-6.12.34"
 
       - name: build-kernel-qmeu
@@ -73,13 +73,14 @@ jobs:
           # Use the kvm_guest config as the base defconfig, which is suitable for qemu
           ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make kvm_guest.config
           # Build the kernel
-          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
+          #ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
+          echo dummy > "${GITHUB_WORKSPACE}/Image" 
 
-          cp -av arch/arm64/boot/Image "${GITHUB_WORKSPACE}/Image"
+          #cp -av arch/arm64/boot/Image "${GITHUB_WORKSPACE}/Image"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: kernel8-qemu
-          path: "${{env.GITHUB_WORKSPACE}}/Image"
+          path: "${{github.workspace}}/Image"
 

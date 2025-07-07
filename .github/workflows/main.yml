@@ -85,6 +85,7 @@ jobs:
 
   test:
     runs-on: ubuntu-24.04-arm
+    needs: [build, build-kernel-qemu]
     steps:
       - name: install-qemu
         run: |
@@ -94,19 +95,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: kernel8-qemu
-          run-id: 16108358867
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
           path: "${{github.workspace}}"
 
       - name: download-image
         uses: actions/download-artifact@v4
         with:
+          name: image
           artifact-ids: 3474235253
-          run-id: 16108358867
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
           path: "${{github.workspace}}"
 
       - name: run
+        timeout-minutes: 5
         run: |
           ls -R "${GITHUB_WORKSPACE}/"
           KERNEL="${GITHUB_WORKSPACE}/Image"

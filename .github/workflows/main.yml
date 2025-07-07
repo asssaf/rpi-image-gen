@@ -91,6 +91,7 @@ jobs:
         with:
           artifact-ids: 3474235253
           run-id: 39
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
           path: "${{github.workspace}}/image"
 
       - name: run

@@ -83,3 +83,16 @@ jobs:
           name: kernel8-qemu
           path: "${{github.workspace}}/Image"
 
+  test:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: download-image
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 3474235253
+          path: "${{github.workspace}}/image"
+
+      - name: run
+        run: |
+          ls -R "${GITHUB_WORKSPACE}/image"
+

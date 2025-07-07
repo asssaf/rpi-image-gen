@@ -1,1 +1,2 @@
-DEVICE_USER1PASS=removeme
+DEVICE_USER1=user
+DEVICE_USER1PASS=raspberry

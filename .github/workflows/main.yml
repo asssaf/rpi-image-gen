@@ -83,3 +83,42 @@ jobs:
           name: kernel8-qemu
           path: "${{github.workspace}}/Image"
 
+  test:
+    runs-on: ubuntu-24.04-arm
+    needs: [build, build-kernel-qemu]
+    steps:
+      - name: install-qemu
+        run: |
+          sudo apt install -y qemu-system-arm
+
+      - name: download-kernel
+        uses: actions/download-artifact@v4
+        with:
+          name: kernel8-qemu
+          path: "${{github.workspace}}"
+
+      - name: download-image
+        uses: actions/download-artifact@v4
+        with:
+          name: image
+          path: "${{github.workspace}}"
+
+      - name: run
+        timeout-minutes: 5
+        run: |
+          KERNEL="${GITHUB_WORKSPACE}/Image"
+          IMAGE="${GITHUB_WORKSPACE}/custom/deploy/custom.img"
+          qemu-system-aarch64 -machine virt -cpu cortex-a72 -smp 2 -m 1G \
+            -kernel "$KERNEL" -append "root=/dev/vda2 rootfstype=ext4 rw console=ttyAMA0 debug=y" \
+            -nographic \
+            -drive format=raw,file=$IMAGE,if=none,id=hd0,cache=writeback,media=disk \
+            -device virtio-blk,drive=hd0,bootindex=0 \
+            -netdev user,id=mynet,hostfwd=tcp::2223-:22 \
+            -device virtio-net-pci,netdev=mynet \
+            -monitor telnet:127.0.0.1:5555,server,nowait > qemu.out &
+
+          until sshpass -p raspberry ssh -o StrictHostKeychecking=no -p 2223 user@127.0.0.1 sudo shutdown -h now
+          do
+            sleep 5
+          done
+

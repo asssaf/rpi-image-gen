@@ -118,4 +118,7 @@ jobs:
             -device virtio-blk,drive=hd0,bootindex=0 \
             -netdev user,id=mynet,hostfwd=tcp::2223-:22 \
             -device virtio-net-pci,netdev=mynet \
-            -monitor telnet:127.0.0.1:5555,server,nowait
+            -monitor telnet:127.0.0.1:5555,server,nowait > qemu.out &
+
+          sshpass -p raspberry ssh -o StrictHostKeychecking=no -p 2223 user@127.0.0.1 shutdown -h now
+

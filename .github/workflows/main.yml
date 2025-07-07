@@ -28,19 +28,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: image
-          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.img"
+          path: "${{github.workspace}}/work/*/deploy/*.img"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sparse
-          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.img.sparse"
+          path: "${{github.workspace}}/work/*/deploy/*.img.sparse"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sbom
-          path: "/home/runner/work/rpi-image-gen/rpi-image-gen/work/*/deploy/*.sbom"
+          path: "${{github.workspace}}/work/*/deploy/*.sbom"
 
   build-kernel-qemu:
     runs-on: ubuntu-24.04-arm
@@ -73,10 +73,9 @@ jobs:
           # Use the kvm_guest config as the base defconfig, which is suitable for qemu
           ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make kvm_guest.config
           # Build the kernel
-          #ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
-          echo dummy > "${GITHUB_WORKSPACE}/Image" 
+          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
 
-          #cp -av arch/arm64/boot/Image "${GITHUB_WORKSPACE}/Image"
+          cp -av arch/arm64/boot/Image "${GITHUB_WORKSPACE}/Image"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4

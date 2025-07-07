@@ -88,7 +88,7 @@ jobs:
     steps:
       - name: install-qemu
         run: |
-          sudo apt install -y qemu
+          sudo apt install -y qemu-system-arm
 
       - name: download-kernel
         uses: actions/download-artifact@v4

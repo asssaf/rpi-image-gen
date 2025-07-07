@@ -86,6 +86,10 @@ jobs:
   test:
     runs-on: ubuntu-24.04-arm
     steps:
+      - name: install-qemu
+        run: |
+          apt install qemu
+
       - name: download-kernel
         uses: actions/download-artifact@v4
         with:
@@ -105,4 +109,13 @@ jobs:
       - name: run
         run: |
           ls -R "${GITHUB_WORKSPACE}/"
-          #${GITHUB_WORKSPACE}/image/custom/deploy/custom.img
+          KERNEL="${GITHUB_WORKSPACE}/Image"
+          IMAGE="${GITHUB_WORKSPACE}/image/custom/deploy/custom.img"
+          qemu-system-aarch64 -machine virt -cpu cortex-a72 -smp 2 -m 1G \
+            -kernel "$KERNEL" -append "root=/dev/vda2 rootfstype=ext4 rw console=ttyAMA0 debug=y" \
+            -nographic \
+            -drive format=raw,file=$IMAGE,if=none,id=hd0,cache=writeback,media=disk \
+            -device virtio-blk,drive=hd0,bootindex=0 \
+            -netdev user,id=mynet,hostfwd=tcp::2223-:22 \
+            -device virtio-net-pci,netdev=mynet \
+            -monitor telnet:127.0.0.1:5555,server,nowait

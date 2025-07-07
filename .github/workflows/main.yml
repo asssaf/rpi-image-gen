@@ -90,6 +90,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           artifact-ids: 3474235253
+          run-id: 39
           path: "${{github.workspace}}/image"
 
       - name: run

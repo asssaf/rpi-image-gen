@@ -31,6 +31,7 @@ jobs:
 
       - name: run build
         run: |
+          mkdir "${GITHUB_WORKSPACE}/work"
           docker run --rm \
             --privileged \
             -v "${GITHUB_WORKSPACE}/custom:/custom" \

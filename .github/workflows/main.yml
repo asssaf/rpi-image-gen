@@ -31,7 +31,6 @@ jobs:
 
       - name: run build
         run: |
-          find /custom
           docker run --rm \
             -e USER=root \
             -v "${GITHUB_WORKSPACE}/custom:/custom" \

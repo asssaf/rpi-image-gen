@@ -13,5 +13,8 @@ FROM --platform=linux/arm64 deps AS builder
 
 ADD custom /custom
 
-ENV USER root
+RUN useradd -m user
+RUN su - user
+ENV USER user
+
 RUN /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.options

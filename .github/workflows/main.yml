@@ -33,9 +33,10 @@ jobs:
         run: |
           find /custom
           docker run --rm \
+            -e USER=root \
             -v "${GITHUB_WORKSPACE}/custom:/custom" \
             ghcr.io/asssaf/rpi-image-gen \
-            /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.option 
+            /rpi-image-gen/build.sh -- -D /custom/ -c custom -o /custom/custom.option 
 
         
   build:

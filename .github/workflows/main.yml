@@ -17,14 +17,22 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push
+      - name: Build and push builder image
         uses: docker/build-push-action@v6
         with:
           file: docker/Dockerfile
           push: true
           tags: ghcr.io/asssaf/rpi-image-gen:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max          
+          cache-to: type=gha,mode=max
+
+      - name: run build
+        run: |
+          docker run --rm -it \
+            -v "${GITHUB_WORKSPACE}/custom:/custom" \
+            ghcr.io/asssaf/rpi-image-gen \
+            /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.option 
+
         
   build:
     if: false

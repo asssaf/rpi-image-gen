@@ -56,20 +56,20 @@ jobs:
             -D /${BUILD_PROFILE}/ -c ${BUILD_PROFILE} -o /${BUILD_PROFILE}/${BUILD_PROFILE}.options
 
           mkdir "${{github.workspace}}/artifacts"
-          docker cp builder:/rpi-image-gen/work/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.img "${{github.workspace}}/artifacts/"
-          docker cp builder:/rpi-image-gen/work/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.sbom "${{github.workspace}}/artifacts/"
+          docker cp builder:/rpi-image-gen/work/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.img "${GITHUB_WORKSPACE}/artifacts/"
+          docker cp builder:/rpi-image-gen/work/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.sbom "${GITHUB_WORKSPACE}/artifacts/"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: image
-          path: "${{github.workspace}}/artifacts/{{env.BUILD_PROFILE}}.img"
+          path: "${{github.workspace}}/artifacts/${{env.BUILD_PROFILE}}.img"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sbom
-          path: "${{github.workspace}}/artifacts/{{env.BUILD_PROFILE}}.sbom"
+          path: "${{github.workspace}}/artifacts/${{env.BUILD_PROFILE}}.sbom"
 
   build-kernel-qemu:
     runs-on: ubuntu-24.04-arm

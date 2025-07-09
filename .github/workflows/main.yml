@@ -16,7 +16,7 @@ jobs:
           file: docker/Dockerfile
           push: false
           tags: asssaf/rpi-image-gen:latest
-          allow: [security.insecure]
+          allow: security.insecure
           cache-from: type=gha
           cache-to: type=gha,mode=max          
         

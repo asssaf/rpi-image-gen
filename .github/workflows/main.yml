@@ -7,81 +7,93 @@ jobs:
   build:
     runs-on: ubuntu-24.04-arm
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: install-keys
-        run: |
-           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
-           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853
-           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BDE6D2B9216EC7A8
-
-      - name: install-deps
-        run: |
-          sudo ./install_deps.sh
-
-      - name: build
-        run: |
-          ./build.sh -D ./custom/ -c custom -o ./custom/custom.options
-
-      - name: upload-artifacts
-        uses: actions/upload-artifact@v4
+      - name: Build and push
+        uses: docker/build-push-action@v6
         with:
-          name: image
-          path: "${{github.workspace}}/work/*/deploy/*.img"
+          push: false
+          tags: asssaf/rpi-image-gen:latest
+          
+  # build:
+  #   runs-on: ubuntu-24.04-arm
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v3
 
-      - name: upload-artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sparse
-          path: "${{github.workspace}}/work/*/deploy/*.img.sparse"
+  #     - name: install-keys
+  #       run: |
+  #          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
+  #          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853
+  #          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BDE6D2B9216EC7A8
 
-      - name: upload-artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sbom
-          path: "${{github.workspace}}/work/*/deploy/*.sbom"
+  #     - name: install-deps
+  #       run: |
+  #         sudo ./install_deps.sh
 
-  build-kernel-qemu:
-    runs-on: ubuntu-24.04-arm
-    steps:
-      - name: cache-kernel-sources
-        id: cache-kernel-sources
-        uses: actions/cache@v4
-        with:
-          path: "${{github.workspace}}/linux-6.12.34"
-          key: "sources-6.12.34"
+  #     - name: build
+  #       run: |
+  #         ./build.sh -D ./custom/ -c custom -o ./custom/custom.options
 
-      - name: download-sources
-        if: steps.cache-kernel-sources.outputs.cache-hit != 'true'
-        run: |
-          curl -sL https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.34.tar.xz | tar -xvJ
+  #     - name: upload-artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: image
+  #         path: "${{github.workspace}}/work/*/deploy/*.img"
 
-      - name: cache-kernel-qemu
-        id: cache-kernel-qemu
-        uses: actions/cache@v4
-        with:
-          path: "${{github.workspace}}/Image"
-          key: "image-6.12.34"
+  #     - name: upload-artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: sparse
+  #         path: "${{github.workspace}}/work/*/deploy/*.img.sparse"
 
-      - name: build-kernel-qmeu
-        if: steps.cache-kernel-qemu.outputs.cache-hit != 'true'
-        run: |
-          cd linux-6.12.34
-          # create a .config file
-          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make defconfig
-          # Use the kvm_guest config as the base defconfig, which is suitable for qemu
-          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make kvm_guest.config
-          # Build the kernel
-          ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
+  #     - name: upload-artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: sbom
+  #         path: "${{github.workspace}}/work/*/deploy/*.sbom"
 
-          cp -av arch/arm64/boot/Image "${GITHUB_WORKSPACE}/Image"
+  # build-kernel-qemu:
+  #   runs-on: ubuntu-24.04-arm
+  #   steps:
+  #     - name: cache-kernel-sources
+  #       id: cache-kernel-sources
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: "${{github.workspace}}/linux-6.12.34"
+  #         key: "sources-6.12.34"
 
-      - name: upload-artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: kernel8-qemu
-          path: "${{github.workspace}}/Image"
+  #     - name: download-sources
+  #       if: steps.cache-kernel-sources.outputs.cache-hit != 'true'
+  #       run: |
+  #         curl -sL https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.34.tar.xz | tar -xvJ
+
+  #     - name: cache-kernel-qemu
+  #       id: cache-kernel-qemu
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: "${{github.workspace}}/Image"
+  #         key: "image-6.12.34"
+
+  #     - name: build-kernel-qmeu
+  #       if: steps.cache-kernel-qemu.outputs.cache-hit != 'true'
+  #       run: |
+  #         cd linux-6.12.34
+  #         # create a .config file
+  #         ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make defconfig
+  #         # Use the kvm_guest config as the base defconfig, which is suitable for qemu
+  #         ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make kvm_guest.config
+  #         # Build the kernel
+  #         ARCH=arm64 CROSS_COMPILE=/bin/aarch64-linux-gnu- make Image -j8
+
+  #         cp -av arch/arm64/boot/Image "${GITHUB_WORKSPACE}/Image"
+
+  #     - name: upload-artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: kernel8-qemu
+  #         path: "${{github.workspace}}/Image"
 
   test:
     runs-on: ubuntu-24.04-arm

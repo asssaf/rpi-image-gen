@@ -26,6 +26,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: checkout
+        uses: actions/checkout@v3
+
       - name: run build
         run: |
           docker run --rm \

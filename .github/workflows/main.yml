@@ -32,6 +32,7 @@ jobs:
       - name: run build
         run: |
           docker run --rm \
+            --privileged \
             -e USER=root \
             -v "${GITHUB_WORKSPACE}/custom:/custom" \
             ghcr.io/asssaf/rpi-image-gen \

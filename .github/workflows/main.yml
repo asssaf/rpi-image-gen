@@ -42,7 +42,7 @@ jobs:
         if: steps.cache-build.outputs.cache-hit != 'true'
         run: |
           docker run \
-            --name builder
+            --name builder \
             --privileged \
             -v "${GITHUB_WORKSPACE}/work:/rpi-image-gen/work" \
             ghcr.io/asssaf/rpi-image-gen \

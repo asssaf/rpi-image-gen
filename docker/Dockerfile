@@ -8,6 +8,9 @@ RUN git clone https://github.com/raspberrypi/rpi-image-gen.git
 
 RUN /rpi-image-gen/install_deps.sh
 
+RUN useradd -m user
+ENV USER user
+USER user
 
 # FROM --platform=linux/arm64 deps AS builder
 

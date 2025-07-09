@@ -34,7 +34,7 @@ jobs:
           docker run --rm \
             --privileged \
             -v "${GITHUB_WORKSPACE}/custom:/custom" \
-            ghcr.io/asssaf/rpi-image-gen \
+            ghcr.io/asssaf/rpi-image-gen -- \
             -D /custom/ -c custom -o /custom/custom.option 
 
         

@@ -52,7 +52,7 @@ jobs:
           docker run \
             --name builder \
             --privileged \
-            -v "${GITHUB_WORKSPACE}/custom:/custom" \
+            -v "${GITHUB_WORKSPACE}/${BUILD_PROFILE}:/${BUILD_PROFILE}" \
             ghcr.io/asssaf/rpi-image-gen \
             -D /${BUILD_PROFILE}/ -c ${BUILD_PROFILE} -o /${BUILD_PROFILE}/${BUILD_PROFILE}.options
 

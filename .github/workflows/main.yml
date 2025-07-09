@@ -37,6 +37,18 @@ jobs:
             ghcr.io/asssaf/rpi-image-gen \
             -D /custom/ -c custom -o /custom/custom.options 
 
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: image
+          path: "${{github.workspace}}/work/*/deploy/*.img"
+
+      - name: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: "${{github.workspace}}/work/*/deploy/*.sbom"
+
         
   build:
     if: false
@@ -68,17 +80,10 @@ jobs:
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sparse
-          path: "${{github.workspace}}/work/*/deploy/*.img.sparse"
-
-      - name: upload-artifacts
-        uses: actions/upload-artifact@v4
-        with:
           name: sbom
           path: "${{github.workspace}}/work/*/deploy/*.sbom"
 
   build-kernel-qemu:
-    if: false
     runs-on: ubuntu-24.04-arm
     steps:
       - name: cache-kernel-sources
@@ -120,9 +125,8 @@ jobs:
           path: "${{github.workspace}}/Image"
 
   test:
-    if: false
     runs-on: ubuntu-24.04-arm
-    needs: [build, build-kernel-qemu]
+    needs: [build-docker, build-kernel-qemu]
     steps:
       - name: install-qemu
         run: |

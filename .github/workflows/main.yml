@@ -49,8 +49,8 @@ jobs:
             -D /${BUILD_PROFILE}/ -c ${BUILD_PROFILE} -o /${BUILD_PROFILE}/${BUILD_PROFILE}.options
 
           mkdir "${{github.workspace}}/artifacts"
-          docker cp builder:/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.img "${{github.workspace}}/artifacts/"
-          docker cp builder:/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.sbom "${{github.workspace}}/artifacts/"
+          docker cp builder:/rpi-image-gen/work/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.img "${{github.workspace}}/artifacts/"
+          docker cp builder:/rpi-image-gen/work/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.sbom "${{github.workspace}}/artifacts/"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4

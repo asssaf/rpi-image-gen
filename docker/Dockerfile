@@ -14,13 +14,4 @@ RUN chown -R user /rpi-image-gen
 
 ENV USER user
 USER user
-
-# FROM --platform=linux/arm64 deps AS builder
-
-# ADD custom /custom
-
-# RUN useradd -m user
-# RUN su - user
-# ENV USER user
-
-# RUN /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.options
+ENTRYPOINT ["/rpi-image-gen/build.sh"]

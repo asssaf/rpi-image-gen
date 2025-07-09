@@ -29,7 +29,15 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: cache-build
+        id: cache-build
+        uses: actions/cache@v4
+        with:
+          path: "${{github.workspace}}/work"
+          key: "build-custom-${{ hashFiles('custom/**') }}"
+
       - name: run build
+        if: steps.cache-kernel-sources.outputs.cache-hit != 'true'
         run: |
           mkdir "${GITHUB_WORKSPACE}/work"
           chmod 1777 "${GITHUB_WORKSPACE}/work"

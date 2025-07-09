@@ -37,7 +37,7 @@ jobs:
           key: "build-custom-${{ hashFiles('custom/**') }}"
 
       - name: run build
-        if: steps.cache-kernel-sources.outputs.cache-hit != 'true'
+        if: steps.cache-build.outputs.cache-hit != 'true'
         run: |
           mkdir "${GITHUB_WORKSPACE}/work"
           chmod 1777 "${GITHUB_WORKSPACE}/work"

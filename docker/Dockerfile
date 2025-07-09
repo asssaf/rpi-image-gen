@@ -12,3 +12,6 @@ RUN /rpi-image-gen/install_deps.sh
 FROM --platform=linux/arm64 deps AS builder
 
 ADD custom /custom
+
+ENV USER root
+RUN /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.options

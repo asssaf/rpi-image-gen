@@ -7,3 +7,8 @@ RUN apt install -y git
 RUN git clone https://github.com/raspberrypi/rpi-image-gen.git
 
 RUN /rpi-image-gen/install_deps.sh
+
+
+FROM --platform=linux/arm64 deps AS builder
+
+ADD custom /custom

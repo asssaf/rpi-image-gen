@@ -2,6 +2,8 @@ on:
   workflow_dispatch:
   pull_request:
 
+env:
+  BUILD_PROFILE: custom
 
 jobs:
   build-docker:
@@ -34,31 +36,33 @@ jobs:
         uses: actions/cache@v4
         with:
           path: "${{github.workspace}}/work"
-          key: "build-custom-${{ hashFiles('custom/**') }}"
+          key: "build-${{env.BUILD_PROFILE}}-${{ hashFiles(env.BUILD_PROFILE + '/**') }}"
 
       - name: run build
         if: steps.cache-build.outputs.cache-hit != 'true'
         run: |
-          mkdir "${GITHUB_WORKSPACE}/work"
-          chmod 1777 "${GITHUB_WORKSPACE}/work"
-          docker run --rm \
+          docker run \
+            --name builder
             --privileged \
-            -v "${GITHUB_WORKSPACE}/custom:/custom" \
             -v "${GITHUB_WORKSPACE}/work:/rpi-image-gen/work" \
             ghcr.io/asssaf/rpi-image-gen \
-            -D /custom/ -c custom -o /custom/custom.options 
+            -D /${BUILD_PROFILE}/ -c ${BUILD_PROFILE} -o /${BUILD_PROFILE}/${BUILD_PROFILE}.options
+
+          mkdir "${{github.workspace}}/artifacts"
+          docker cp builder:/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.img "${{github.workspace}}/artifacts/"
+          docker cp builder:/${BUILD_PROFILE}/deploy/${BUILD_PROFILE}.sbom "${{github.workspace}}/artifacts/"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: image
-          path: "${{github.workspace}}/work/*/deploy/*.img"
+          path: "${{github.workspace}}/artifacts/{{env.BUILD_PROFILE}}.img"
 
       - name: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sbom
-          path: "${{github.workspace}}/work/*/deploy/*.sbom"
+          path: "${{github.workspace}}/artifacts/{{env.BUILD_PROFILE}}.sbom"
 
   build-kernel-qemu:
     runs-on: ubuntu-24.04-arm
@@ -125,7 +129,7 @@ jobs:
         timeout-minutes: 5
         run: |
           KERNEL="${GITHUB_WORKSPACE}/Image"
-          IMAGE="${GITHUB_WORKSPACE}/custom/deploy/custom.img"
+          IMAGE="${GITHUB_WORKSPACE}/${BUILD_PROFILE}.img"
           qemu-system-aarch64 -machine virt -cpu cortex-a72 -smp 2 -m 1G \
             -kernel "$KERNEL" -append "root=/dev/vda2 rootfstype=ext4 rw console=ttyAMA0 debug=y" \
             -nographic \

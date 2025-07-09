@@ -14,7 +14,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           file: docker/Dockerfile
-          push: false
+          push: true
           tags: asssaf/rpi-image-gen:latest
           allow: security.insecure
           cache-from: type=gha

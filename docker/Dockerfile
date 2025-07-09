@@ -9,12 +9,12 @@ RUN git clone https://github.com/raspberrypi/rpi-image-gen.git
 RUN /rpi-image-gen/install_deps.sh
 
 
-FROM --platform=linux/arm64 deps AS builder
+# FROM --platform=linux/arm64 deps AS builder
 
-ADD custom /custom
+# ADD custom /custom
 
-RUN useradd -m user
-RUN su - user
-ENV USER user
+# RUN useradd -m user
+# RUN su - user
+# ENV USER user
 
-RUN /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.options
+# RUN /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.options

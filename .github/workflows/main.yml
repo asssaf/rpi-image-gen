@@ -35,7 +35,7 @@ jobs:
         id: cache-build
         uses: actions/cache@v4
         with:
-          path: "${{github.workspace}}/work"
+          path: "${{github.workspace}}/artifacts"
           key: "build-${{env.BUILD_PROFILE}}-${{ hashFiles(env.BUILD_PROFILE + '/**') }}"
 
       - name: run build

@@ -28,7 +28,7 @@ jobs:
 
       - name: run build
         run: |
-          docker run --rm -it \
+          docker run --rm \
             -v "${GITHUB_WORKSPACE}/custom:/custom" \
             ghcr.io/asssaf/rpi-image-gen \
             /rpi-image-gen/build.sh -D /custom/ -c custom -o /custom/custom.option 

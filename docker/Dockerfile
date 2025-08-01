@@ -12,6 +12,8 @@ RUN useradd -m user
 
 RUN chown -R user /rpi-image-gen
 
+ADD entrypoint.sh /
+
 ENV USER user
 USER user
-ENTRYPOINT ["/rpi-image-gen/build.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

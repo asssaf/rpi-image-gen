@@ -39,12 +39,16 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: tree-for-cache
+        run: |
+          find "${GITHUB_WORKSPACE}/${BUILD_PROFILE}" > "${GITHUB_WORKSPACE}/tree.txt"
+
       - name: cache-build
         id: cache-build
         uses: actions/cache@v4
         with:
           path: "${{github.workspace}}/artifacts"
-          key: "build-${{env.BUILD_PROFILE}}-${{ hashFiles(format('{0}/**', env.BUILD_PROFILE)) }}"
+          key: "build-${{env.BUILD_PROFILE}}-${{ hashFiles(format('{0}/**', env.BUILD_PROFILE), 'tree.txt') }}"
 
       - name: run build
         if: steps.cache-build.outputs.cache-hit != 'true'

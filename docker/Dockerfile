@@ -2,7 +2,7 @@
 FROM --platform=linux/arm64 debian:latest AS deps
 
 RUN apt update
-RUN apt install -y git
+RUN apt install -y git curl
 
 RUN git clone https://github.com/raspberrypi/rpi-image-gen.git
 
@@ -12,6 +12,8 @@ RUN useradd -m user
 
 RUN chown -R user /rpi-image-gen
 
+ADD entrypoint.sh /
+
 ENV USER user
 USER user
-ENTRYPOINT ["/rpi-image-gen/build.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,0 +1,72 @@
+image <IMAGE_NAME>.<IMAGE_SUFFIX> {
+   hdimage {
+      align = 8M
+      partition-table-type = "mbr"
+   }
+
+   partition recovery {
+      in-partition-table = true
+      partition-type = 0xC
+      image = recovery.vfat
+      bootable = true
+   }
+
+   partition boot {
+      in-partition-table = true
+      partition-type = 0xC
+      image = boot.vfat
+      bootable = true
+   }
+
+   partition root {
+      in-partition-table = true
+      partition-type = 0x83
+      image = root.ext4
+   }
+
+   partition home {
+      in-partition-table = true
+      partition-type = 0x83
+      image = home.ext4
+   }
+}
+
+image recovery.vfat {
+   vfat {
+      label = "<RECOVERY_LABEL>"
+      extraargs = "-S <SECTOR_SIZE> -i 0x1"
+   }
+   size = <RECOVERY_SIZE>
+   mountpoint = "/boot/recovery"
+}
+
+image boot.vfat {
+   vfat {
+      label = "<BOOT_LABEL>"
+      extraargs = "-S <SECTOR_SIZE> -i 0x2"
+   }
+   size = <FW_SIZE>
+   mountpoint = "/boot/firmware"
+}
+
+image root.ext4 {
+   ext4 {
+      label = "<ROOT_LABEL>"
+      use-mke2fs = true
+      mke2fs-conf = <MKE2FSCONF>
+      extraargs = "-L <ROOT_LABEL>"
+   }
+   size = <ROOT_SIZE>
+   mountpoint = "/"
+}
+
+image home.ext4 {
+   ext4 {
+      label = "<HOME_LABEL>"
+      use-mke2fs = true
+      mke2fs-conf = <MKE2FSCONF>
+      extraargs = "-L <HOME_LABEL>"
+   }
+   size = <HOME_SIZE>
+   mountpoint = "/home"
+}

@@ -1,0 +1,4 @@
+/dev/disk/by-label/ROOT /               ext4 rw,relatime,errors=remount-ro 0 1
+/dev/disk/by-label/HOME /home           ext4 rw,relatime,errors=remount-ro 0 2
+/dev/disk/by-label/BOOT /boot/firmware  vfat rw,noatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
+/dev/disk/by-label/RECOVERY /boot/recovery  vfat rw,noatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2

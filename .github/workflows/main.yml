@@ -29,7 +29,8 @@ jobs:
       - name: Build and push builder image
         uses: docker/build-push-action@v6
         with:
-          file: docker/Dockerfile
+          file: ./Dockerfile
+          context: "{{defaultContext}}:docker"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -39,12 +40,16 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: tree-for-cache
+        run: |
+          find "${GITHUB_WORKSPACE}/${BUILD_PROFILE}" > "${GITHUB_WORKSPACE}/tree.txt"
+
       - name: cache-build
         id: cache-build
         uses: actions/cache@v4
         with:
           path: "${{github.workspace}}/artifacts"
-          key: "build-${{env.BUILD_PROFILE}}-${{ hashFiles(format('{0}/**', env.BUILD_PROFILE)) }}"
+          key: "build-${{env.BUILD_PROFILE}}-${{ hashFiles(format('{0}/**', env.BUILD_PROFILE), 'tree.txt') }}"
 
       - name: run build
         if: steps.cache-build.outputs.cache-hit != 'true'
@@ -114,7 +119,7 @@ jobs:
           path: "${{github.workspace}}/Image"
 
   test:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-24.04
     needs: [build-docker, build-kernel-qemu]
     steps:
       - name: install-qemu
@@ -138,8 +143,9 @@ jobs:
         run: |
           KERNEL="${GITHUB_WORKSPACE}/Image"
           IMAGE="${GITHUB_WORKSPACE}/${BUILD_PROFILE}.img"
+          ROOT="/dev/vda3"
           qemu-system-aarch64 -machine virt -cpu cortex-a72 -smp 2 -m 1G \
-            -kernel "$KERNEL" -append "root=/dev/vda2 rootfstype=ext4 rw console=ttyAMA0 debug=y" \
+            -kernel "$KERNEL" -append "root=$ROOT rootfstype=ext4 rw console=ttyAMA0 debug=y" \
             -nographic \
             -drive format=raw,file=$IMAGE,if=none,id=hd0,cache=writeback,media=disk \
             -device virtio-blk,drive=hd0,bootindex=0 \
@@ -147,8 +153,9 @@ jobs:
             -device virtio-net-pci,netdev=mynet \
             -monitor telnet:127.0.0.1:5555,server,nowait > qemu.out &
 
-          until sshpass -p raspberry ssh -o StrictHostKeychecking=no -p 2223 user@127.0.0.1 sudo shutdown -h now
+          until sshpass -p raspberry ssh -o StrictHostKeychecking=no -p 2223 user@127.0.0.1 sh -c "cat /etc/fstab; sudo shutdown -h now"
           do
             sleep 5
           done
 
+          cat qemu.out

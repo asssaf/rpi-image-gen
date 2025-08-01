@@ -2,7 +2,7 @@
 FROM --platform=linux/arm64 debian:latest AS deps
 
 RUN apt update
-RUN apt install -y git
+RUN apt install -y git curl
 
 RUN git clone https://github.com/raspberrypi/rpi-image-gen.git
 

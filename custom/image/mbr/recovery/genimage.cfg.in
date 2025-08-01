@@ -33,8 +33,8 @@ image <IMAGE_NAME>.<IMAGE_SUFFIX> {
 
 image recovery.vfat {
    vfat {
-      label = "RECOVERY"
-      extraargs = "-S <SECTOR_SIZE> -i <RECOVERY_LABEL>"
+      label = "<RECOVERY_LABEL>"
+      extraargs = "-S <SECTOR_SIZE> -i 0x1"
    }
    size = <RECOVERY_SIZE>
    mountpoint = "/boot/recovery"
@@ -42,8 +42,8 @@ image recovery.vfat {
 
 image boot.vfat {
    vfat {
-      label = "BOOT"
-      extraargs = "-S <SECTOR_SIZE> -i <BOOT_LABEL>"
+      label = "<BOOT_LABEL>"
+      extraargs = "-S <SECTOR_SIZE> -i 0x2"
    }
    size = <FW_SIZE>
    mountpoint = "/boot/firmware"
@@ -51,7 +51,7 @@ image boot.vfat {
 
 image root.ext4 {
    ext4 {
-      label = "ROOT"
+      label = "<ROOT_LABEL>"
       use-mke2fs = true
       mke2fs-conf = <MKE2FSCONF>
       extraargs = "-L <ROOT_LABEL>"
@@ -62,7 +62,7 @@ image root.ext4 {
 
 image home.ext4 {
    ext4 {
-      label = "HOME"
+      label = "<HOME_LABEL>"
       use-mke2fs = true
       mke2fs-conf = <MKE2FSCONF>
       extraargs = "-L <HOME_LABEL>"

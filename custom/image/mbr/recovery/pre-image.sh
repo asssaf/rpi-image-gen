@@ -5,6 +5,10 @@ set -eu
 rootfs=$1
 genimg_in=$2
 
+# install recovery (TODO)
+mkdir -p ${rootfs}/boot/recovery
+curl -sLo ${rootfs}/boot/recovery/piCore64-16.0.0.img.gz http://tinycorelinux.net/16.x/aarch64/release/RPi/piCore64-16.0.0.img.gz
+
 RECOVERY_LABEL="RECOVERY"
 BOOT_LABEL="BOOT"
 ROOT_LABEL="ROOT"
@@ -24,5 +28,5 @@ cat genimage.cfg.in | sed \
    -e "s|<RECOVERY_LABEL>|$RECOVERY_LABEL|g" \
    -e "s|<BOOT_LABEL>|$BOOT_LABEL|g" \
    -e "s|<ROOT_LABEL>|$ROOT_LABEL|g" \
-   -e "s|<HOME_LABEL>|$ROOT_LABEL|g" \
+   -e "s|<HOME_LABEL>|$HOME_LABEL|g" \
    > ${genimg_in}/genimage.cfg

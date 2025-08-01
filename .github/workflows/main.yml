@@ -143,8 +143,9 @@ jobs:
         run: |
           KERNEL="${GITHUB_WORKSPACE}/Image"
           IMAGE="${GITHUB_WORKSPACE}/${BUILD_PROFILE}.img"
+          ROOT="/dev/vda3"
           qemu-system-aarch64 -machine virt -cpu cortex-a72 -smp 2 -m 1G \
-            -kernel "$KERNEL" -append "root=/dev/vda2 rootfstype=ext4 rw console=ttyAMA0 debug=y" \
+            -kernel "$KERNEL" -append "root=$ROOT rootfstype=ext4 rw console=ttyAMA0 debug=y" \
             -nographic \
             -drive format=raw,file=$IMAGE,if=none,id=hd0,cache=writeback,media=disk \
             -device virtio-blk,drive=hd0,bootindex=0 \

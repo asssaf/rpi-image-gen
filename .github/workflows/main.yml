@@ -114,7 +114,7 @@ jobs:
           path: "${{github.workspace}}/Image"
 
   test:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-24.04
     needs: [build-docker, build-kernel-qemu]
     steps:
       - name: install-qemu
